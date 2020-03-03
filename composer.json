@@ -1,0 +1,17 @@
+{
+    "name": "danieletulone/laravel-base-crud",
+    "type": "library",
+    "authors": [
+        {
+            "name": "danieletulone",
+            "email": "danieletulone.work@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "DanieleTulone\\BaseCrud\\": "src/"
+        }
+    }
+}
