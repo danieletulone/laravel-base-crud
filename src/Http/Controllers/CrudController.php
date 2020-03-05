@@ -126,7 +126,7 @@ class CrudController extends Controller
      * @param mixed $id 
      * @return mixed 
      */
-    public function destroy()
+    final public function destroy()
     {
         $params = $this->getParams();
         
@@ -148,7 +148,7 @@ class CrudController extends Controller
      * 
      * @return mixed 
      */
-    public function index()
+    final public function index()
     {
         $params = $this->getParams();
 
@@ -183,7 +183,7 @@ class CrudController extends Controller
      * @param mixed $method 
      * @return mixed 
      */
-    private function response($params, $method)
+    protected function response($params, $method)
     {
         return view(ViewHelper::getView($this->model,  $method, false), $params);
     }
@@ -193,7 +193,7 @@ class CrudController extends Controller
      * 
      * @return Illuminate\View\View|Illuminate\Contracts\View\Factory 
      */
-    public function show()
+    final public function show()
     {   
         $params = $this->getParams();
 
@@ -217,7 +217,7 @@ class CrudController extends Controller
      * @param Illuminate\Http\Request $request 
      * @return mixed 
      */
-    public function store()
+    final public function store()
     {
         $params = $this->getParams();
 
@@ -243,7 +243,7 @@ class CrudController extends Controller
      * @param mixed $data 
      * @return mixed 
      */
-    public function update()
+    final public function update()
     {   
         $params = $this->getParams();
 
