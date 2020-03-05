@@ -1,5 +1,6 @@
 <?php
 
+
 namespace DanieleTulone\BaseCrud\Controllers;
 
 use DanieleTulone\BaseCrud\ClassHelper;
@@ -14,7 +15,7 @@ use Validator;
  * 
  * @package App\Http\Controllers
  */
-class BaseCrudController extends Controller
+class CrudController extends Controller
 {
     /**
      * FormRequest used for validate data.
@@ -74,23 +75,29 @@ class BaseCrudController extends Controller
      * Make operations after action.
      * 
      * @author Daniele Tulone <danieletulone.work@gmail.com>
-     * @trait App\Traits\HasAfterActions
      * 
      * @param mixed $method 
-     * @param mixed $result 
+     * @param mixed $params
      * @return void 
      */
-    private function callAfterAction($method, $result)
+    private function callAfterAction($method, &$params)
     {
-        if (ClassHelper::hasTrait(get_called_class(), 'App\Traits\HasAfterActions')) {
+        if (ClassHelper::hasTrait(get_called_class(), 'DanieleTulone\BaseCrud\Traits\HasAfterActions')) {
             $method = ucfirst($method);
-            $this->{"after{$method}"}($result);
+            $this->{"after{$method}"}($params);
         }
     }
 
+    /**
+     * Make operations before action.
+     * 
+     * @param mixed $method 
+     * @param mixed $params 
+     * @return void 
+     */
     private function callBeforeAction($method, &$params)
     {        
-        if (ClassHelper::hasTrait(get_called_class(), 'App\Traits\HasBeforeActions')) {
+        if (ClassHelper::hasTrait(get_called_class(), 'DanieleTulone\BaseCrud\Traits\HasBeforeActions')) {
             $method = ucfirst($method);
             $this->{"before{$method}"}($params);
         }
@@ -127,9 +134,11 @@ class BaseCrudController extends Controller
 
         $deleted = $this->model::findOrFail($params["model"])->delete();
         
-        $this->callAfterAction(__FUNCTION__ ,$deleted);
+        $params["deleted"] = $deleted;
 
-        return $this->response($deleted, __FUNCTION__);
+        $this->callAfterAction(__FUNCTION__ , $params);
+
+        return $this->response($params, __FUNCTION__);
     }
 
     /**
@@ -149,7 +158,7 @@ class BaseCrudController extends Controller
 
         $this->callAfterAction(__FUNCTION__ , $params);
 
-        return view(ViewHelper::getView($this->model, "index"), $params);
+        return $this->response($params, __FUNCTION__);
     }
 
     /**
@@ -174,23 +183,9 @@ class BaseCrudController extends Controller
      * @param mixed $method 
      * @return mixed 
      */
-    private function response($flag, $method)
+    private function response($params, $method)
     {
-        if ($flag) {
-            return redirect()
-                ->route(ViewHelper::getView($this->model, "index", false))
-                ->with(
-                    'success', 
-                    $this->messages[$method]['success']
-                );
-        } else {
-            return redirect()
-                ->back()
-                ->with(
-                    'error', 
-                    $this->messages[$method]['error']
-                );
-        }
+        return view(ViewHelper::getView($this->model,  $method, false), $params);
     }
 
     /**
@@ -206,7 +201,7 @@ class BaseCrudController extends Controller
 
         $params["model"] = $model;
 
-        return view(ViewHelper::getView($this->model, "show"), $params);
+        return $this->response($params, __FUNCTION__);
     }
 
     public function showQuery(&$params)
@@ -236,7 +231,7 @@ class BaseCrudController extends Controller
 
         $this->callAfterAction(__FUNCTION__ , $params);
 
-        return $this->response($params["model"], __FUNCTION__);
+        return $this->response($params, __FUNCTION__);
     }
 
     /**
@@ -262,6 +257,6 @@ class BaseCrudController extends Controller
 
         $this->callAfterAction(__FUNCTION__ , $params);
 
-        return $this->response($params["updated"], __FUNCTION__);
+        return $this->response($params, __FUNCTION__);
     }
 }
