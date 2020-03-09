@@ -18,9 +18,9 @@ trait Validable
      * 
      * @return void 
      */
-    public function validate($params)
+    public function callValidator(&$params)
     {        
-        return Validator::make(
+        $params["data"] = Validator::make(
             $params, 
             $this->formRequest::getRules($params)
         )->validate();
