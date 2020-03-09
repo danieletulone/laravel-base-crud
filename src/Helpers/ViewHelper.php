@@ -22,11 +22,11 @@ class ViewHelper
      * @param bool $pages 
      * @return string 
      */
-    public static function getView($class, $method = "index", $pages = true)
+    public static function getView($class, $method = "index")
     {
         $modelName = strtolower(ClassHelper::getName($class));
 
-        $pieces = self::getPieces($modelName, $method, $pages);
+        $pieces = self::getPieces($modelName, $method);
 
         return implode(".", $pieces);
     }
@@ -81,15 +81,11 @@ class ViewHelper
         return $pieces;
     }
 
-    public static function getPieces($modelName, $method, $pages = true)
+    public static function getPieces($modelName, $method)
     {
         $pieces = [];
+        
         self::addAdmin($pieces);
-
-        if ($pages) {
-            self::addPath($pieces, "pages");
-        }
-
         self::addModel($pieces, $modelName);
         self::addMethod($pieces, $method);
 
