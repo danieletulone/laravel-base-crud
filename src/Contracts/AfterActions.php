@@ -14,38 +14,38 @@ interface AfterActions
      * 
      * @author Daniele Tulone <danieletulone.work@gmail.com>
      * 
-     * @param mixed $result 
+     * @param mixed &$params 
      * @return void 
      */
-    public function afterDestroy($result);
+    public function afterDestroy(&$params);
 
     /**
      * This method will be used after index action.
      * 
      * @author Daniele Tulone <danieletulone.work@gmail.com>
      * 
-     * @param mixed $result 
+     * @param mixed &$params 
      * @return void 
      */
-    public function afterIndex($result);
+    public function afterIndex(&$params);
 
     /**
      * This method will be used after store action.
      * 
      * @author Daniele Tulone <danieletulone.work@gmail.com>
      * 
-     * @param mixed $result 
+     * @param mixed &$params 
      * @return void 
      */
-    public function afterStore($result);
+    public function afterStore(&$params);
 
     /**
      * This method will be used after update action.
      * 
      * @author Daniele Tulone <danieletulone.work@gmail.com>
      * 
-     * @param mixed $result 
+     * @param mixed &$params 
      * @return void 
      */
-    public function afterUpdate($result);
+    public function afterUpdate(&$params);
 }
