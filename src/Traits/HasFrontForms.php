@@ -2,7 +2,7 @@
 
 namespace DanieleTulone\BaseCrud\Traits;
 
-use DanieleTulone\BaseCrud\ViewHelper;
+use DanieleTulone\BaseCrud\Helpers\ViewHelper;
 
 /**
  * This trait add create and edit methods to controller.
@@ -38,8 +38,12 @@ trait HasFrontForms
     public function edit()
     {
         $params = request()->route()->parameters;
+        
         $model = $this->showQuery($params);
-        $params["model"] = $model;
+        
+        $modelName = strtolower(ClassHelper::getName($this->models));
+        
+        $params[$modelName] = $model;
 
         return view(
             ViewHelper::getView($this->model, "edit"), 
