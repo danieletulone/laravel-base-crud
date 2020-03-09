@@ -15,7 +15,7 @@ trait HasCrudQueries
      */
     public function deleteQuery(&$params)
     {
-        $modelName = strtolower(ClassHelper::getName($this->models));
+        $modelName = strtolower(ClassHelper::getName($this->model));
 
         $params["deleted"] = $this->model::findOrFail($params[$modelName])->delete();
     }
@@ -28,7 +28,7 @@ trait HasCrudQueries
      */
     public function indexQuery(&$params)
     {
-        $modelsName = Str::plural(strtolower(ClassHelper::getName($this->models)));
+        $modelsName = Str::plural(strtolower(ClassHelper::getName($this->model)));
 
         $params[$modelsName] = $this->model::paginate();
     }
@@ -41,7 +41,7 @@ trait HasCrudQueries
      */
     public function showQuery(&$params)
     {
-        $modelName = strtolower(ClassHelper::getName($this->models));
+        $modelName = strtolower(ClassHelper::getName($this->model));
 
         return $this->model::findOrFail($params[$modelName]);
     }
@@ -72,7 +72,7 @@ trait HasCrudQueries
      */
     public function updateQuery(&$params)
     {
-        $modelName = strtolower(ClassHelper::getName($this->models));
+        $modelName = strtolower(ClassHelper::getName($this->model));
 
         if (isset($params["data"])) {
             $data = $params["data"];

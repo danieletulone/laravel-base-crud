@@ -23,8 +23,7 @@ class CrudController extends BaseController
     use AuthorizesRequests, 
         DispatchesJobs, 
         HasCrudQueries, 
-        Sideable, 
-        Validable;
+        Sideable;
 
     /**
      * Model to use with this controller.
