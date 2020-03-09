@@ -7,6 +7,9 @@ use DanieleTulone\BaseCrud\Traits\HasCrudQueries;
 use DanieleTulone\BaseCrud\Traits\Sideable;
 use DanieleTulone\BaseCrud\Traits\Validable;
 use DanieleTulone\BaseCrud\Helpers\ViewHelper;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as BaseController;
 
 /**
  * Base controller used for basic crud.
@@ -15,9 +18,13 @@ use DanieleTulone\BaseCrud\Helpers\ViewHelper;
  * 
  * @package App\Http\Controllers
  */
-class CrudController extends Controller
+class CrudController extends BaseController
 {
-    use HasCrudQueries, Sideable ,Validable;
+    use AuthorizesRequests, 
+        DispatchesJobs, 
+        HasCrudQueries, 
+        Sideable, 
+        Validable;
 
     /**
      * Model to use with this controller.
@@ -47,17 +54,7 @@ class CrudController extends Controller
      */
     public function destroy()
     {
-        $params = $this->getParams();
-        
-        $this->callBeforeAction(__FUNCTION__ , $params);
-
-        $deleted = $this->model::findOrFail($params["model"])->delete();
-        
-        $params["deleted"] = $deleted;
-
-        $this->callAfterAction(__FUNCTION__ , $params);
-
-        return $this->response($params, __FUNCTION__);
+        return $this->dispacthAction(__FUNCTION__);
     }
 
     /**
@@ -67,15 +64,7 @@ class CrudController extends Controller
      */
     public function index()
     {
-        $params = $this->getParams();
-
-        $this->callBeforeAction(__FUNCTION__ , $params);
-
-        $params["models"] = $this->indexQuery($params);
-
-        $this->callAfterAction(__FUNCTION__ , $params);
-
-        return $this->response($params, __FUNCTION__);
+        return $this->dispacthAction(__FUNCTION__);
     }
 
     /**
@@ -98,13 +87,7 @@ class CrudController extends Controller
      */
     public function show()
     {   
-        $params = $this->getParams();
-
-        $model = $this->showQuery($params);
-
-        $params["model"] = $model;
-
-        return $this->response($params, __FUNCTION__);
+        return $this->dispacthAction(__FUNCTION__);
     }
 
     /**
@@ -117,17 +100,7 @@ class CrudController extends Controller
      */
     public function store()
     {
-        $params = $this->getParams();
-
-        $this->callBeforeAction(__FUNCTION__ , $params);
-
-        $data = $this->validate($params);
-
-        $params["model"] = $this->storeQuery($data);
-
-        $this->callAfterAction(__FUNCTION__ , $params);
-
-        return $this->response($params, __FUNCTION__);
+        return $this->dispacthAction(__FUNCTION__);
     }
 
     /**
@@ -141,16 +114,29 @@ class CrudController extends Controller
      */
     public function update()
     {   
+        return $this->dispacthAction(__FUNCTION__);
+    }
+
+    public function dispacthAction($action)
+    {
         $params = $this->getParams();
 
-        $this->callBeforeAction(__FUNCTION__ , $params);
+        if (method_exists($this, "callBeforeAction")) {
+            $this->callBeforeAction($action, $params);
+        }
         
-        $data = $this->validate($params);
+        if (method_exists($this, "callValidator")) {
+            $params["data"] = $this->callValidator($params);
+        }
 
-        $params["updated"] = $this->updateQuery($params, $data);
+        if (method_exists($this, $action . "Query")) {
+            $this->{$action . "Query"}($params);
+        }
 
-        $this->callAfterAction(__FUNCTION__ , $params);
+        if (method_exists($this, "callAfterAction")) {
+            $this->callAfterAction($action, $params);
+        }
 
-        return $this->response($params, __FUNCTION__);
+        return $this->response($params, $action);
     }
 }
