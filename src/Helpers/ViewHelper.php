@@ -2,6 +2,8 @@
 
 namespace DanieleTulone\BaseCrud\Helpers;
 
+use DanieleTulone\BaseCrud\Helpers\ClassHelper;
+
 /**
  * This class helps you to generate dinamically view/route name.
  * Ex: admin.pages.product.index
