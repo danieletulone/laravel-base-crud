@@ -10,6 +10,7 @@ use DanieleTulone\BaseCrud\Helpers\ViewHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Str;
 
 /**
  * Base controller used for basic crud.
@@ -39,14 +40,6 @@ class CrudController extends BaseController
      * @var mixed
      */
     protected $model;
-
-    /**
-     * Prefix of name of view to be used after store, 
-     * update and delete action.
-     * 
-     * @var mixed
-     */
-    protected $prefixNotGet = "index";
 
     /**
      * Get all params from route url and from request.
@@ -92,13 +85,11 @@ class CrudController extends BaseController
      */
     protected function response($params, $method)
     {
-        $viewRouteName = ViewHelper::getView($this->model, $method);
-
         if (in_array($method, ["store", "update", "delete"])) {
-            return redirect()->route($viewRouteName);
+            return redirect()->back();
         }
 
-        return view($viewRouteName);
+        return view(ViewHelper::getView($this->model,  $method, false), $params);
     }
 
     /**
