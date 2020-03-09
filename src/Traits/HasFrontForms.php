@@ -7,7 +7,7 @@ use DanieleTulone\BaseCrud\ViewHelper;
 /**
  * This trait add create and edit methods to controller.
  * 
- * @author Daniele Tulone <danieletulone.work@gmail.com>
+ * @package DanieleTulone\BaseCrud\Traits
  */
 trait HasFrontForms
 {
@@ -21,7 +21,6 @@ trait HasFrontForms
     public function create()
     {
         $params = request()->route()->parameters;
-        $params["title"] = "Create";
 
         return view(
             ViewHelper::getView($this->model, "create"), 
@@ -41,7 +40,6 @@ trait HasFrontForms
         $params = request()->route()->parameters;
         $model = $this->showQuery($params);
         $params["model"] = $model;
-        $params["title"] = "Edit";
 
         return view(
             ViewHelper::getView($this->model, "edit"), 
