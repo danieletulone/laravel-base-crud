@@ -25,15 +25,6 @@ class CrudController extends Controller
     public $formRequest;
 
     /**
-     * Defaul paginate value.
-     * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
-     * 
-     * @var int
-     */
-    public $itemsForPage = 12;
-
-    /**
      * Messages used to give feedback to user.
      * 
      * @author Daniele Tulone <danieletulone.work@gmail.com>
@@ -170,7 +161,7 @@ class CrudController extends Controller
      */
     public function indexQuery(&$params)
     {
-        return $this->model::paginate($this->itemsForPage);
+        return $this->model::paginate();
     }
 
     /**
