@@ -7,7 +7,7 @@ namespace DanieleTulone\BaseCrud\Helpers;
  * 
  * @author Daniele Tulone <danieletulone.work@gmail.com>
  * 
- * @package App\Helpers
+ * @package DanieleTulone\BaseCrud\Helpers
  */
 class ClassHelper
 {

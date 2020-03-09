@@ -6,9 +6,7 @@ namespace DanieleTulone\BaseCrud\Helpers;
  * This class helps you to generate dinamically view/route name.
  * Ex: admin.pages.product.index
  * 
- * @author Daniele Tulone <danieletulone.work@gmail.com>
- * 
- * @package App\Helpers
+ * @package DanieleTulone\BaseCrud\Helpers
  */
 class ViewHelper
 {
@@ -16,8 +14,6 @@ class ViewHelper
 
     /**
      * Get view string. Also usable for route names.
-     * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
      * 
      * @param mixed $class 
      * @param string $method 
@@ -36,8 +32,6 @@ class ViewHelper
     /**
      * Add admin.
      * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
-     * 
      * @return string
      */
     public static function addAdmin(&$pieces)
@@ -52,8 +46,6 @@ class ViewHelper
     /**
      * Add model.
      * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
-     * 
      * @return string 
      */
     public static function addModel(&$pieces, $modelName)
@@ -65,8 +57,6 @@ class ViewHelper
 
     /**
      * Add method
-     * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
      * 
      * @return string 
      */
