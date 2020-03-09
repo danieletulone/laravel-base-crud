@@ -6,12 +6,6 @@ use Validator;
 
 trait Validable
 {
-    /**
-     * FormRequest used for validate data.
-     * 
-     * @var mixed
-     */
-    protected $formRequest;
 
     /**
      * Validate the request.
@@ -19,10 +13,12 @@ trait Validable
      * @return void 
      */
     public function callValidator(&$params)
-    {        
-        $params["data"] = Validator::make(
-            $params, 
-            $this->formRequest::getRules($params)
-        )->validate();
+    {
+        if (!empty($this->formRequest)) {
+            $params["data"] = Validator::make(
+                $params, 
+                $this->formRequest::getRules($params)
+            )->validate();
+        }
     }
 }

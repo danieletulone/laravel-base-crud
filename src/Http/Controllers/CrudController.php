@@ -23,7 +23,15 @@ class CrudController extends BaseController
     use AuthorizesRequests, 
         DispatchesJobs, 
         HasCrudQueries, 
-        Sideable;
+        Sideable, 
+        Validable;
+
+    /**
+     * FormRequest used for validate data.
+     * 
+     * @var mixed
+     */
+    protected $formRequest;
 
     /**
      * Model to use with this controller.
@@ -124,7 +132,7 @@ class CrudController extends BaseController
             $this->callBeforeAction($action, $params);
         }
         
-        if (method_exists($this, "callValidator")) {
+        if (method_exists($this, "callValidator") && in_array($action, ["store", "update"])) {
             $params["data"] = $this->callValidator($params);
         }
 
