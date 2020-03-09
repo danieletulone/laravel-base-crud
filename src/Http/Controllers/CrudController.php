@@ -92,11 +92,13 @@ class CrudController extends BaseController
      */
     protected function response($params, $method)
     {
+        $viewRouteName = ViewHelper::getView($this->model, $method);
+
         if (in_array($method, ["store", "update", "delete"])) {
-            $method = $this->prefixNotGet;
+            return redirect()->route($viewRouteName);
         }
 
-        return view(ViewHelper::getView($this->model,  $method, false), $params);
+        return view($viewRouteName);
     }
 
     /**
