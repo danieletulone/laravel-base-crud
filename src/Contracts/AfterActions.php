@@ -1,21 +1,13 @@
 <?php
 
-namespace DanieleTulone\BaseCrud\Traits;
+namespace DanieleTulone\BaseCrud\Contracts;
 
 /**
- * This trait add methods that are performed after any action.
- * The controller which you want apply this trait must to
- * extend BaseCrudController. 
+ * Defines methods that are performed after any action.
  * 
- * Actions are: 
- *          - Destroy
- *          - Index
- *          - Store
- *          - Update
- * 
- * @author Daniele Tulone <danieletulone.work@gmail.com>
+ * @package DanieleTulone\BaseCrud\Contracts
  */
-trait HasAfterActions
+interface AfterActions
 {
     /**
      * This method will be used after destroy action.
@@ -25,7 +17,7 @@ trait HasAfterActions
      * @param mixed $result 
      * @return void 
      */
-    public function afterDestroy($result) {}
+    public function afterDestroy($result);
 
     /**
      * This method will be used after index action.
@@ -35,7 +27,7 @@ trait HasAfterActions
      * @param mixed $result 
      * @return void 
      */
-    public function afterIndex($result) {}
+    public function afterIndex($result);
 
     /**
      * This method will be used after store action.
@@ -45,7 +37,7 @@ trait HasAfterActions
      * @param mixed $result 
      * @return void 
      */
-    public function afterStore($result) {}
+    public function afterStore($result);
 
     /**
      * This method will be used after update action.
@@ -55,5 +47,5 @@ trait HasAfterActions
      * @param mixed $result 
      * @return void 
      */
-    public function afterUpdate($result) {}
+    public function afterUpdate($result);
 }

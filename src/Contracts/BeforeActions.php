@@ -1,21 +1,13 @@
 <?php
 
-namespace DanieleTulone\BaseCrud\Traits;
+namespace DanieleTulone\BaseCrud\Contracts;
 
 /**
- * This trait add methods that are performed before any action.
- * The controller which you want apply this trait must to
- * extend BaseCrudController. 
+ * Define methods that are performed before any action.
  * 
- * Actions are: 
- *          - Destroy
- *          - Index
- *          - Store
- *          - Update
- * 
- * @author Daniele Tulone <danieletulone.work@gmail.com>
+ * @package DanieleTulone\BaseCrud\Contracts
  */
-trait HasBeforeActions
+interface BeforeActions
 {
     /**
      * This method will be used before destroy action.
@@ -25,7 +17,7 @@ trait HasBeforeActions
      * @param mixed $params Pointer to parameters.
      * @return void 
      */
-    public function beforeDestroy(&$params) {}
+    public function beforeDestroy(&$params);
 
     /**
      * This method will be used before index action.
@@ -35,7 +27,7 @@ trait HasBeforeActions
      * @param mixed $params Pointer to parameters.
      * @return void 
      */
-    public function beforeIndex(&$params) {}
+    public function beforeIndex(&$params);
     
     /**
      * This method will be used before store action.
@@ -45,7 +37,7 @@ trait HasBeforeActions
      * @param mixed $params Pointer to parameters.
      * @return void 
      */
-    public function beforeStore(&$params) {}
+    public function beforeStore(&$params);
 
     /**
      * This method will be used before update action.
@@ -55,5 +47,5 @@ trait HasBeforeActions
      * @param mixed $params Pointer to parameters.
      * @return void 
      */
-    public function beforeUpdate(&$params) {}
+    public function beforeUpdate(&$params);
 }
