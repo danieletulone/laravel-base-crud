@@ -41,6 +41,14 @@ class CrudController extends BaseController
     protected $model;
 
     /**
+     * Prefix of name of view to be used after store, 
+     * update and delete action.
+     * 
+     * @var mixed
+     */
+    protected $prefixNotGet = "index";
+
+    /**
      * Get all params from route url and from request.
      *  
      * @return array 
@@ -84,6 +92,10 @@ class CrudController extends BaseController
      */
     protected function response($params, $method)
     {
+        if (in_array($method, ["store", "update", "delete"])) {
+            $method = $this->redirectNotGet;
+        }
+        
         return view(ViewHelper::getView($this->model,  $method, false), $params);
     }
 
