@@ -93,9 +93,9 @@ class CrudController extends BaseController
     protected function response($params, $method)
     {
         if (in_array($method, ["store", "update", "delete"])) {
-            $method = $this->redirectNotGet;
+            $method = $this->prefixNotGet;
         }
-        
+
         return view(ViewHelper::getView($this->model,  $method, false), $params);
     }
 
