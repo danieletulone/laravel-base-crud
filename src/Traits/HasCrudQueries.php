@@ -2,8 +2,24 @@
 
 namespace DanieleTulone\BaseCrud\Traits;
 
+use DanieleTulone\BaseCrud\Helpers\ClassHelper;
+use Illuminate\Support\Str;
+
 trait HasCrudQueries
 {
+    /**
+     * Query used for delete method.
+     * 
+     * @param mixed $params 
+     * @return mixed
+     */
+    public function deleteQuery(&$params)
+    {
+        $modelName = strtolower(ClassHelper::getName($this->models));
+
+        $params["deleted"] = $this->model::findOrFail($params[$modelName])->delete();
+    }
+
     /**
      * Query used for index method.
      * 
@@ -12,7 +28,9 @@ trait HasCrudQueries
      */
     public function indexQuery(&$params)
     {
-        return $this->model::paginate();
+        $modelsName = Str::plural(strtolower(ClassHelper::getName($this->models)));
+
+        $params[$modelsName] = $this->model::paginate();
     }
 
     /**
@@ -23,7 +41,9 @@ trait HasCrudQueries
      */
     public function showQuery(&$params)
     {
-        return $this->model::findOrFail($params['model']);
+        $modelName = strtolower(ClassHelper::getName($this->models));
+
+        return $this->model::findOrFail($params[$modelName]);
     }
 
     /**
@@ -32,8 +52,14 @@ trait HasCrudQueries
      * @param mixed $data 
      * @return mixed 
      */
-    public function storeQuery($data)
+    public function storeQuery(&$params)
     {
+        if (isset($params["data"])) {
+            $data = $params["data"];
+        } else {
+            $data = $params;
+        }
+
         return $this->model::create($data);
     }
 
@@ -44,8 +70,16 @@ trait HasCrudQueries
      * @param mixed $data 
      * @return mixed 
      */
-    public function updateQuery($params, $data)
+    public function updateQuery(&$params)
     {
-        return $this->model::findOrFail($params["model"])->update($data);
+        $modelName = strtolower(ClassHelper::getName($this->models));
+
+        if (isset($params["data"])) {
+            $data = $params["data"];
+        } else {
+            $data = $params;
+        }
+
+        $params["updated"] = $this->model::findOrFail($params[$modelName])->update($data);
     }
 }
