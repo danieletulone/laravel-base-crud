@@ -17,7 +17,7 @@ class RestCrudController extends CrudController
      * @param mixed $params 
      * @return mixed 
      */
-    public function response($params)
+    public function response($params, $method)
     {
         return $params;
     }
