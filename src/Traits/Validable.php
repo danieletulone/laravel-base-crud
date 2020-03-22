@@ -6,7 +6,13 @@ use Validator;
 
 trait Validable
 {
-
+    /**
+     * FormRequest used for validate data.
+     * 
+     * @var mixed
+     */
+    protected $formRequest;
+    
     /**
      * Validate the request.
      * 

@@ -24,13 +24,6 @@ class CrudController extends BaseController
         Sideable;
 
     /**
-     * FormRequest used for validate data.
-     * 
-     * @var mixed
-     */
-    protected $formRequest;
-
-    /**
      * Model to use with this controller.
      * 
      * @var mixed
