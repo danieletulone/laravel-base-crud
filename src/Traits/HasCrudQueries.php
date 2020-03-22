@@ -6,9 +6,30 @@ use Illuminate\Support\Str;
 
 trait HasCrudQueries
 {
+    /**
+     * Get model name by class namespace.
+     * 
+     * @return string 
+     */
     final private function getModelName()
     {
         return strtolower(class_basename($this->model));
+    }
+
+    /**
+     * Get data or params. When there are validated 
+     * data return data, otherwise params.
+     * 
+     * @param mixed $params 
+     * @return mixed 
+     */
+    final private function getDataOrParams($params)
+    {
+        if (isset($params["data"])) {
+            return $params["data"];
+        }
+        
+        return $params;
     }
 
     /**
@@ -58,11 +79,7 @@ trait HasCrudQueries
      */
     public function storeQuery(&$params)
     {
-        if (isset($params["data"])) {
-            $data = $params["data"];
-        } else {
-            $data = $params;
-        }
+        $data = $this->getDataOrParams($params);
 
         return $this->model::create($data);
     }
@@ -78,11 +95,7 @@ trait HasCrudQueries
     {
         $modelName = $this->getModelName();
 
-        if (isset($params["data"])) {
-            $data = $params["data"];
-        } else {
-            $data = $params;
-        }
+        $data = $this->getDataOrParams($params);
 
         $params["updated"] = $this->model::findOrFail($params[$modelName])->update($data);
     }
