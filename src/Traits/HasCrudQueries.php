@@ -6,6 +6,11 @@ use Illuminate\Support\Str;
 
 trait HasCrudQueries
 {
+    final private function getModelName()
+    {
+        return strtolower(class_basename($this->model));
+    }
+
     /**
      * Query used for delete method.
      * 
@@ -14,7 +19,7 @@ trait HasCrudQueries
      */
     public function deleteQuery(&$params)
     {
-        $modelName = strtolower(class_basename($this->model));
+        $modelName = $this->getModelName();
 
         $params["deleted"] = $this->model::findOrFail($params[$modelName])->delete();
     }
@@ -27,7 +32,7 @@ trait HasCrudQueries
      */
     public function indexQuery(&$params)
     {
-        $modelsName = Str::plural(strtolower(class_basename($this->model)));
+        $modelsName = Str::plural($this->getModelName());
 
         $params[$modelsName] = $this->model::paginate();
     }
@@ -40,7 +45,7 @@ trait HasCrudQueries
      */
     public function showQuery(&$params)
     {
-        $modelName = strtolower(class_basename($this->model));
+        $modelName = $this->getModelName();
 
         return $this->model::findOrFail($params[$modelName]);
     }
@@ -71,7 +76,7 @@ trait HasCrudQueries
      */
     public function updateQuery(&$params)
     {
-        $modelName = strtolower(class_basename($this->model));
+        $modelName = $this->getModelName();
 
         if (isset($params["data"])) {
             $data = $params["data"];
