@@ -1,6 +1,11 @@
 {
     "name": "danieletulone/laravel-base-crud",
     "type": "library",
+    "keywords": [
+        "laravel",
+        "controller",
+        "crud",
+    ],
     "authors": [
         {
             "name": "danieletulone",
