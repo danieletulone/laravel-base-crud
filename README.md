@@ -44,15 +44,18 @@ class LogoController extends RestCrudController
 ```
 
 3. Define routes, for example, in ```routes/web.php```.
-````
+```php
 Route::resource('pizzas', 'PizzaController');
+```
 
 4. Create views follow this standard:
--- resources
------- views
----------- pizza
--------------- index.blade.php
--------------- show.blade.php
+```
+|--- resources
+|------ views
+|--------- pizza
+|------------ index.blade.php
+|------------ show.blade.php
+```
 
 5. By default the CrudController has store, index, show, update and delete method. <br>
 If you want to use create and edit method and views, you must to add HasFrontForms to Controller.
