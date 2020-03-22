@@ -41,7 +41,7 @@ trait HasFrontForms
         
         $model = $this->showQuery($params);
         
-        $modelName = strtolower(ClassHelper::getName($this->models));
+        $modelName = strtolower(class_basename($this->models));
         
         $params[$modelName] = $model;
 

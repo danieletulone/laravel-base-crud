@@ -10,7 +10,6 @@ use DanieleTulone\BaseCrud\Helpers\ViewHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Str;
 
 /**
  * Base controller used for basic crud.

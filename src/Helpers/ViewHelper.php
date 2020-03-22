@@ -2,8 +2,6 @@
 
 namespace DanieleTulone\BaseCrud\Helpers;
 
-use DanieleTulone\BaseCrud\Helpers\ClassHelper;
-
 /**
  * This class helps you to generate dinamically view/route name.
  * Ex: admin.pages.product.index
@@ -24,7 +22,7 @@ class ViewHelper
      */
     public static function getView($class, $method = "index")
     {
-        $modelName = strtolower(ClassHelper::getName($class));
+        $modelName = strtolower(class_basename($class));
 
         $pieces = self::getPieces($modelName, $method);
 

@@ -2,7 +2,6 @@
 
 namespace DanieleTulone\BaseCrud\Traits;
 
-use DanieleTulone\BaseCrud\Helpers\ClassHelper;
 use Illuminate\Support\Str;
 
 trait HasCrudQueries
@@ -15,7 +14,7 @@ trait HasCrudQueries
      */
     public function deleteQuery(&$params)
     {
-        $modelName = strtolower(ClassHelper::getName($this->model));
+        $modelName = strtolower(class_basename($this->model));
 
         $params["deleted"] = $this->model::findOrFail($params[$modelName])->delete();
     }
@@ -28,7 +27,7 @@ trait HasCrudQueries
      */
     public function indexQuery(&$params)
     {
-        $modelsName = Str::plural(strtolower(ClassHelper::getName($this->model)));
+        $modelsName = Str::plural(strtolower(class_basename($this->model)));
 
         $params[$modelsName] = $this->model::paginate();
     }
@@ -41,7 +40,7 @@ trait HasCrudQueries
      */
     public function showQuery(&$params)
     {
-        $modelName = strtolower(ClassHelper::getName($this->model));
+        $modelName = strtolower(class_basename($this->model));
 
         return $this->model::findOrFail($params[$modelName]);
     }
@@ -72,7 +71,7 @@ trait HasCrudQueries
      */
     public function updateQuery(&$params)
     {
-        $modelName = strtolower(ClassHelper::getName($this->model));
+        $modelName = strtolower(class_basename($this->model));
 
         if (isset($params["data"])) {
             $data = $params["data"];
