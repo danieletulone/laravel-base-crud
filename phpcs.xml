@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="pcsg-generated-ruleset">
+<description>Created with the PHP Coding Standard Generator. http://edorian.github.com/php-coding-standard-generator/
+</description>
+<rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+<rule ref="Generic.Commenting.Todo"/>
+<rule ref="Generic.Commenting.Fixme"/>
+<rule ref="Generic.ControlStructures.InlineControlStructure"/>
+<rule ref="Generic.Files.LineLength"/>
+<rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+<rule ref="Generic.Formatting.MultipleStatementAlignment"/>
+<rule ref="Generic.Formatting.SpaceAfterCast"/>
+<rule ref="Generic.Metrics.NestingLevel"/>
+<rule ref="Generic.PHP.DeprecatedFunctions"/>
+<rule ref="Generic.PHP.LowerCaseConstant"/>
+<rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+</ruleset>
