@@ -1,4 +1,4 @@
-# Laravel Crud Controller
+# Laravel Base Crud - Controller
 Welcome to Laravel Crud Controller repository. 
 
 ## What's the intent of this package?
