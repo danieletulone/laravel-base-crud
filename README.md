@@ -17,9 +17,9 @@ Simply install with composer.
 ## Usage
 Before use the controller, you must create all resources for a new model:
 ```bash
-php artisan make:model Todo -a
+php artisan make:model Pizza -a
 ```
-<sup>The __-a__ flag meangin **all**: controller, model, migration, seeder and factory.s</sup>
+<sup>The __-a__ flag meangin **all**: controller, model, migration, seeder and factory.</sup>
 
 #### Basic Usage
 Edit the generated controller. 
@@ -32,14 +32,14 @@ namespace App\Http\Controllers;
 
 use DanieleTulone\BaseCrud\Controllers\RestCrudController;
 
-class LogoController extends RestCrudController
+class PizzaController extends RestCrudController
 {
     /**
      * Model to use with this controller.
      * 
      * @var mixed
      */
-    protected $model = 'App\Todo';
+    protected $model = 'App\Pizza';
 }
 ```
 
@@ -67,7 +67,7 @@ namespace App\Http\Controllers;
 use DanieleTulone\BaseCrud\Controllers\RestCrudController;
 use DanieleTulone\BaseCrud\Traits\HasFrontForms;
 
-class LogoController extends RestCrudController
+class PizzaController extends RestCrudController
 {
     use HasFrontForms;
 
@@ -76,10 +76,49 @@ class LogoController extends RestCrudController
      * 
      * @var mixed
      */
-    protected $model = 'App\Todo';
+    protected $model = 'App\Pizza';
 }
 ```
-
 and in resources/views/pizza add:
 - create.blade.php
 - edit.blade.php
+
+Now, define rules into Pizza model, create the views and migrate table.
+**All crud operations are implemented!**
+
+#### Basic Usage + Validation
+1. Follow the basic usage instructions.
+2. Add the trait DanieleTulone\BaseCrud\Traits\Validable;
+3. Create a FormRequest class and define rules.
+```
+php artisan make:request PizzaRequest
+```
+4. Add the formRequest property to your controller. Now, your controller looks like that:
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use DanieleTulone\BaseCrud\Controllers\RestCrudController;
+use DanieleTulone\BaseCrud\Traits\HasFrontForms;
+use DanieleTulone\BaseCrud\Traits\Validable;
+
+class PizzaController extends RestCrudController
+{
+    use HasFrontForms, Validable;
+     
+    /**
+     * FormRequest used for validate data.
+     * 
+     * @var mixed
+     */
+    protected $formRequest = 'App\Http\Requests\PizzaRequest';
+    
+    /**
+     * Model to use with this controller.
+     * 
+     * @var mixed
+     */
+    protected $model = 'App\Pizza';
+}
+```
