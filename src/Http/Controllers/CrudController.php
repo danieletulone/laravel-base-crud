@@ -1,11 +1,9 @@
 <?php
 
-
 namespace DanieleTulone\BaseCrud\Controllers;
 
 use DanieleTulone\BaseCrud\Traits\HasCrudQueries;
 use DanieleTulone\BaseCrud\Traits\Sideable;
-use DanieleTulone\BaseCrud\Traits\Validable;
 use DanieleTulone\BaseCrud\Helpers\ViewHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -23,8 +21,7 @@ class CrudController extends BaseController
     use AuthorizesRequests, 
         DispatchesJobs, 
         HasCrudQueries, 
-        Sideable, 
-        Validable;
+        Sideable;
 
     /**
      * FormRequest used for validate data.
