@@ -25,7 +25,7 @@ trait Viewable
      * 
      * @var string
      */
-    protected $deleteRedirect = 'index';
+    protected $destroyRedirect = 'index';
 
     /**
      * Redirect to a view. 
