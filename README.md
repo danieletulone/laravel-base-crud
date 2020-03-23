@@ -30,7 +30,7 @@ Edit the generated controller.
 
 namespace App\Http\Controllers;
 
-use DanieleTulone\BaseCrud\Controllers\CrudController;
+use DanieleTulone\BaseCrud\Http\Controllers\CrudController;
 
 class PizzaController extends CrudController
 {
@@ -52,7 +52,7 @@ Route::resource('pizzas', 'PizzaController');
 ```
 |--- resources
 |------ views
-|--------- pizza
+|--------- pizzas
 |------------ index.blade.php
 |------------ show.blade.php
 ```
@@ -64,7 +64,7 @@ If you want to use create and edit method and views, you must to add HasFrontFor
 
 namespace App\Http\Controllers;
 
-use DanieleTulone\BaseCrud\Controllers\CrudController;
+use DanieleTulone\BaseCrud\Http\Controllers\CrudController;
 use DanieleTulone\BaseCrud\Traits\HasFrontForms;
 
 class PizzaController extends CrudController
@@ -79,7 +79,7 @@ class PizzaController extends CrudController
     protected $model = 'App\Pizza';
 }
 ```
-and in resources/views/pizza add:
+and in resources/views/pizzas add:
 - create.blade.php
 - edit.blade.php
 
@@ -99,7 +99,7 @@ php artisan make:request PizzaRequest
 
 namespace App\Http\Controllers;
 
-use DanieleTulone\BaseCrud\Controllers\CrudController;
+use DanieleTulone\BaseCrud\Http\Controllers\CrudController;
 use DanieleTulone\BaseCrud\Traits\HasFrontForms;
 use DanieleTulone\BaseCrud\Traits\Validable;
 
