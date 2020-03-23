@@ -37,7 +37,7 @@ trait Viewable
      */
     protected function response($params, $method)
     {
-        if (in_array($method, ["store", "update", "delete"])) {
+        if (in_array($method, ["store", "update", "destroy"])) {
             return redirect()->route(ViewHelper::getView(
                 $this->model, 
                 $this->{$method . "Redirect"},
