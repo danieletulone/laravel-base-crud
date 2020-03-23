@@ -38,7 +38,7 @@ trait HasCrudQueries
      * @param mixed $params 
      * @return mixed
      */
-    public function deleteQuery(&$params)
+    public function destroyQuery(&$params)
     {
         $modelName = $this->getModelName();
 
