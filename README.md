@@ -11,7 +11,7 @@ There are two controller:
 Simply install with composer.
 
 ```bash
-  composer require danieletulone/laravel-crud-controller
+  composer require danieletulone/laravel-base-crud
 ```
 
 # Usage
