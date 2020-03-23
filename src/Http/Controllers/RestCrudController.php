@@ -1,24 +1,16 @@
 <?php
 
-namespace DanieleTulone\BaseCrud\Controllers;
+namespace DanieleTulone\BaseCrud\Http\Controllers;
 
-use DanieleTulone\BaseCrud\Controllers\CrudController;
+use DanieleTulone\BaseCrud\Http\Controllers\Controller;
+use DanieleTulone\BaseCrud\Traits\Jsonable;
 
 /**
  * Crud controller for rest application.
  * 
  * @package DanieleTulone\BaseCrud\Controllers
  */
-class RestCrudController extends CrudController
+class RestCrudController extends Controller
 {
-    /**
-     * Return $params. Laravel convert it into json response.
-     * 
-     * @param mixed $params 
-     * @return mixed 
-     */
-    public function response($params, $method)
-    {
-        return $params;
-    }
+    use Jsonable;
 }
