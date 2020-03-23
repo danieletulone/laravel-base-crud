@@ -32,7 +32,7 @@ trait Sideable
      */
     final protected function callBeforeAction($method, &$params)
     {        
-        $this->callSideAction("after", $method, $params);
+        $this->callSideAction("before", $method, $params);
     }
 
     /**
