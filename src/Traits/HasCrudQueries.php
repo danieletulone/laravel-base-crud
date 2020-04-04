@@ -68,7 +68,7 @@ trait HasCrudQueries
     {
         $modelName = $this->getModelName();
 
-        return $this->model::findOrFail($params[$modelName]);
+        $params[$modelName] = $this->model::findOrFail($params[$modelName]);
     }
 
     /**
@@ -80,8 +80,9 @@ trait HasCrudQueries
     public function storeQuery(&$params)
     {
         $data = $this->getDataOrParams($params);
+        $modelName =$this->getModelName();
 
-        return $this->model::create($data);
+        $params[$modelName] = $this->model::create($data);
     }
 
     /**
