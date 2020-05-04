@@ -1,6 +1,5 @@
 {
     "name": "danieletulone/laravel-base-crud",
-    "type": "library",
     "keywords": [
         "laravel",
         "controller",
@@ -13,10 +12,25 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "php": "^7.2.5"
+    },
+    "require-dev": {
+        "laravel/framework": "6.x.x"
+    },
     "autoload": {
         "psr-4": {
             "DanieleTulone\\BaseCrud\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DanieleTulone\\BaseCrud\\Providers\\BaseCrudServiceProvider"
+            ],
+            "aliases": {
+                "ViewHelper": "DanieleTulone\\Helpers\\ViewHelper"
+            }
         }
     }
 }
