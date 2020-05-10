@@ -2,14 +2,16 @@
 
 namespace DanieleTulone\BaseCrud\Traits;
 
+use App\Http\Requests\PostRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 trait HasCrudQueries
 {
     /**
      * Get model name by class namespace.
-     * 
-     * @return string 
+     *
+     * @return string
      */
     final private function getModelName()
     {
@@ -17,87 +19,104 @@ trait HasCrudQueries
     }
 
     /**
-     * Get data or params. When there are validated 
+     * Get data or params. When there are validated
      * data return data, otherwise params.
-     * 
-     * @param mixed $params 
-     * @return mixed 
+     *
+     * @param mixed $params
+     * @return mixed
      */
-    final private function getDataOrParams($params)
+    final private function getDataOrParams()
     {
+        $params = $this->getParams();
+
         if (isset($params["data"])) {
             return $params["data"];
         }
-        
+
         return $params;
     }
 
     /**
      * Query used for delete method.
-     * 
-     * @param mixed $params 
+     *
+     * @param mixed $params
      * @return mixed
      */
-    public function destroyQuery(&$params)
+    public function destroyQuery()
     {
         $modelName = $this->getModelName();
 
-        $params["deleted"] = $this->model::findOrFail($params[$modelName])->delete();
+        $this->params["deleted"] = $this->model::findOrFail($this->params[$modelName])->delete();
     }
 
     /**
      * Query used for index method.
-     * 
-     * @param mixed $params 
+     *
+     * @param mixed $params
      * @return mixed
      */
-    public function indexQuery(&$params)
+    public function indexQuery()
     {
+        if ($this->formRequest != null) {
+            resolve($this->formRequest);
+        }
+
         $modelsName = Str::plural($this->getModelName());
 
-        $params[$modelsName] = $this->model::paginate();
+        $this->params[$modelsName] = $this->model::paginate();
     }
 
     /**
      * Query used for show method
-     * 
-     * @param mixed $params 
-     * @return mixed 
+     *
+     * @param mixed $params
+     * @return mixed
      */
-    public function showQuery(&$params)
+    public function showQuery()
     {
         $modelName = $this->getModelName();
 
-        $params[$modelName] = $this->model::findOrFail($params[$modelName]);
+        $this->params = $this->model::findOrFail($this->params[$modelName]);
     }
 
     /**
      * Query used for store method.
-     * 
-     * @param mixed $data 
-     * @return mixed 
+     *
+     * @param mixed $data
+     * @return mixed
      */
-    public function storeQuery(&$params)
+    public function storeQuery()
     {
+        if ($this->formRequest != null) {
+            resolve($this->formRequest);
+        }
+
+        $params = $this->getParams();
         $data = $this->getDataOrParams($params);
         $modelName =$this->getModelName();
 
-        $params[$modelName] = $this->model::create($data);
+        $this->params[$modelName] = $this->model::create($data);
     }
 
     /**
      * Query used for update method.
-     * 
-     * @param mixed $params 
-     * @param mixed $data 
-     * @return mixed 
+     *
+     * @param mixed $params
+     * @param mixed $data
+     * @return mixed
      */
-    public function updateQuery(&$params)
+    public function updateQuery()
     {
+        if ($this->formRequest != null) {
+            resolve($this->formRequest);
+        }
+
+        $params = $this->getParams();
+
         $modelName = $this->getModelName();
 
         $data = $this->getDataOrParams($params);
 
-        $params["updated"] = $this->model::findOrFail($params[$modelName])->update($data);
+        $this->params["updated"] = $this->model::findOrFail($params[$modelName])->update($data);
     }
 }
