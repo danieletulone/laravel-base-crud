@@ -24,7 +24,7 @@ php artisan make:model Pizza -a
 ## Basic Usage
 Edit the generated controller. 
 1. Extends RestCrudController instead of Laravel standard Controller.
-2. Set the property $model with the full name of generated model.
+2. (optional) Set the property $model into controller with the namespace of your model.
  ```php
 <?php
 
@@ -34,12 +34,7 @@ use DanieleTulone\BaseCrud\Http\Controllers\CrudController;
 
 class PizzaController extends CrudController
 {
-    /**
-     * Model to use with this controller.
-     * 
-     * @var mixed
-     */
-    protected $model = 'App\Pizza';
+    //
 }
 ```
 
@@ -58,7 +53,7 @@ Route::resource('pizzas', 'PizzaController');
 ```
 
 5. By default the CrudController has store, index, show, update and delete method. <br>
-If you want to use create and edit method and views, you must to add HasFrontForms to Controller.
+If you want to use create and edit method and views, you must to add the trait HasFrontForms to Controller.
 ```php
 <?php
 
@@ -70,13 +65,6 @@ use DanieleTulone\BaseCrud\Traits\HasFrontForms;
 class PizzaController extends CrudController
 {
     use HasFrontForms;
-
-    /**
-     * Model to use with this controller.
-     * 
-     * @var mixed
-     */
-    protected $model = 'App\Pizza';
 }
 ```
 and in resources/views/pizzas add:
@@ -88,40 +76,11 @@ Now, define rules into Pizza model, create the views and migrate table.
 
 ## Basic Usage + Validation
 1. Follow the basic usage instructions.
-2. Add the trait DanieleTulone\BaseCrud\Traits\Validable;
-3. Create a FormRequest class and define rules.
+2. Create a FormRequest and define rules;
 ```
 php artisan make:request PizzaRequest
 ```
-4. Add the formRequest property to your controller. Now, your controller looks like that:
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use DanieleTulone\BaseCrud\Http\Controllers\CrudController;
-use DanieleTulone\BaseCrud\Traits\HasFrontForms;
-use DanieleTulone\BaseCrud\Traits\Validable;
-
-class PizzaController extends CrudController
-{
-    use HasFrontForms, Validable;
-     
-    /**
-     * FormRequest used for validate data.
-     * 
-     * @var mixed
-     */
-    protected $formRequest = 'App\Http\Requests\PizzaRequest';
-    
-    /**
-     * Model to use with this controller.
-     * 
-     * @var mixed
-     */
-    protected $model = 'App\Pizza';
-}
-```
+3. (optional) Set $formRequest property into controller.
 
 ## Advanced Usage: Customization
 The main controller has main operations and default queries. <bt>
@@ -139,7 +98,7 @@ Every method has its query method.
 So, in your controller, you can ovveride methods like that:
 ```php
 class PizzaController extends CrudController
-
+{
     // ... code
     
     /**
@@ -152,10 +111,11 @@ class PizzaController extends CrudController
     {
         $modelsName = Str::plural($this->getModelName());
 
-        $params[$modelsName] = $this->model::where('price', '>', 15)->paginate();
+        $this->params[$modelsName] = $this->model::where('price', '>', 15)->paginate();
     }
     
     // ... code
+}
 ```
 
 ## Customize operations
