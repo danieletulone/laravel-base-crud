@@ -2,39 +2,145 @@
 
 namespace DanieleTulone\BaseCrud\Http\Controllers;
 
+use DanieleTulone\BaseCrud\Exceptions\ModelNotSpecifiedException;
 use DanieleTulone\BaseCrud\Traits\HasCrudQueries;
 use DanieleTulone\BaseCrud\Traits\Sideable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Str;
 
 /**
  * Base controller used for basic crud.
- * 
+ *
  * @author Daniele Tulone <danieletulone.work@gmail.com>
- * 
+ *
  * @package DanieleTulone\BaseCrud\Http\Controllers
  */
 class Controller extends BaseController
 {
-    use AuthorizesRequests, 
-        DispatchesJobs, 
-        HasCrudQueries, 
+    use AuthorizesRequests,
+        DispatchesJobs,
+        HasCrudQueries,
         Sideable;
-        
+
     /**
-     * Model to use with this controller.
-     * 
-     * @var mixed
+     * List of default actions.
+     *
+     * @var array
      */
-    protected $model;
+    protected $actions = [
+        'create',
+        'destroy',
+        'edit',
+        'index',
+        'show',
+        'store',
+        'update',
+    ];
+
+    /**
+     * Params.
+     *
+     * @var array
+     */
+    public $params = [];
+
+    /**
+     * Get property or get automatically model or formRequest, otherwise null.
+     *
+     * @param [type] $method
+     * @param [type] $parameters
+     * @return void
+     */
+    public function __call($method, $parameters)
+    {
+        if (in_array($method, $this->actions)) {
+            return $this->dispacthAction($method);
+        }
+
+        if (in_array($method, $this->actions) || method_exists($this, $method)) {
+            return call_user_func_array( array( $this, $method), $parameters);
+        } else {
+            return parent::__call($method, $parameters);
+        }
+    }
+
+    public function __construct()
+    {
+        $this->params = $this->injectParams();
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        } else {
+            if ($property == "model") {
+                return $this->getModel();
+            }
+
+            if ($property == "formRequest") {
+                return $this->getFormRequest();
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * Get controller
+     *
+     * @return void
+     */
+    public function getControllerName()
+    {
+        $controller = app('request')->route()->getAction()['controller'];
+
+        return explode("@", class_basename($controller))[0];
+    }
+
+    /**
+     * Get model name from controller.
+     * If controller is PostController, model will be Post
+     *
+     * @return void
+     */
+    public function getModel()
+    {
+        $model = Str::replaceFirst('Controller', '', $this->getControllerName());
+
+        if (class_exists('App\\' . ucfirst($model))) {
+            return 'App\\' . ucfirst($model);
+        } else {
+            throw new ModelNotSpecifiedException($this->getControllerName());
+        }
+    }
+
+    /**
+     * Get model name from controller.
+     * If controller is PostController, model will be Post
+     *
+     * @return void
+     */
+    public function getFormRequest()
+    {
+        $model = Str::replaceFirst('App\\', '', $this->getModel());
+        $formRequest = 'App\Http\Requests\\' . $model . 'Request';
+
+        if (class_exists($formRequest)) {
+            return $formRequest;
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Get all params from route url and from request.
-     *  
-     * @return array 
+     *
+     * @return array
      */
-    public function getParams()
+    public function injectParams()
     {
         return array_merge(
             request()->all(),
@@ -43,83 +149,33 @@ class Controller extends BaseController
     }
 
     /**
-     * Default destroy action.
-     * 
-     * @param mixed $id 
-     * @return mixed 
+     * Get all params from route url and from request.
+     *
+     * @return array
      */
-    public function destroy()
+    public function getParams()
     {
-        return $this->dispacthAction(__FUNCTION__);
-    }
-
-    /**
-     * Default index action.
-     * 
-     * @return mixed 
-     */
-    public function index()
-    {
-        return $this->dispacthAction(__FUNCTION__);
-    }
-
-    /**
-     * Show the resource.
-     * 
-     * @return Illuminate\View\View|Illuminate\Contracts\View\Factory 
-     */
-    public function show()
-    {   
-        return $this->dispacthAction(__FUNCTION__);
-    }
-
-    /**
-     * Default store action.
-     * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
-     * 
-     * @param Illuminate\Http\Request $request 
-     * @return mixed 
-     */
-    public function store()
-    {
-        return $this->dispacthAction(__FUNCTION__);
-    }
-
-    /**
-     * Default update action.
-     * 
-     * @author Daniele Tulone <danieletulone.work@gmail.com>
-     * 
-     * @param mixed $id 
-     * @param mixed $data 
-     * @return mixed 
-     */
-    public function update()
-    {   
-        return $this->dispacthAction(__FUNCTION__);
+        return $this->params;
     }
 
     public function dispacthAction($action)
     {
-        $params = $this->getParams();
-
         if (method_exists($this, "callBeforeAction")) {
-            $this->callBeforeAction($action, $params);
+            $this->callBeforeAction($action);
         }
-        
+
         if (method_exists($this, "callValidator") && in_array($action, ["store", "update"])) {
-            $params["data"] = $this->callValidator($params);
+            $params["data"] = $this->callValidator();
         }
 
         if (method_exists($this, $action . "Query")) {
-            $this->{$action . "Query"}($params);
+            $this->{$action . "Query"}();
         }
 
         if (method_exists($this, "callAfterAction")) {
-            $this->callAfterAction($action, $params);
+            $this->callAfterAction($action);
         }
 
-        return $this->response($params, $action);
+        return $this->response($this->params, $action);
     }
 }
