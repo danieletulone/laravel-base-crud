@@ -2,21 +2,10 @@
 
 namespace DanieleTulone\BaseCrud\Traits;
 
-use App\Http\Requests\PostRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 trait HasCrudQueries
 {
-    /**
-     * Get model name by class namespace.
-     *
-     * @return string
-     */
-    final private function getModelName()
-    {
-        return strtolower(class_basename($this->model));
-    }
 
     /**
      * Get data or params. When there are validated
