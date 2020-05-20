@@ -7,10 +7,23 @@ use DanieleTulone\BaseCrud\Traits\Jsonable;
 
 /**
  * Crud controller for rest application.
- * 
+ *
  * @package DanieleTulone\BaseCrud\Controllers
  */
-class RestCrudController extends Controller
+class ApiController extends Controller
 {
     use Jsonable;
+
+    /**
+     * List of default actions.
+     *
+     * @var array
+     */
+    protected $actions = [
+        'destroy',
+        'index',
+        'show',
+        'store',
+        'update',
+    ];
 }
