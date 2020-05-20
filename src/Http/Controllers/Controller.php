@@ -2,13 +2,12 @@
 
 namespace DanieleTulone\BaseCrud\Http\Controllers;
 
-use DanieleTulone\BaseCrud\Exceptions\ModelNotSpecifiedException;
 use DanieleTulone\BaseCrud\Traits\HasCrudQueries;
+use DanieleTulone\BaseCrud\Traits\ResourcesDeductible;
 use DanieleTulone\BaseCrud\Traits\Sideable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Str;
 
 /**
  * Base controller used for basic crud.
@@ -22,6 +21,7 @@ class Controller extends BaseController
     use AuthorizesRequests,
         DispatchesJobs,
         HasCrudQueries,
+        ResourcesDeductible,
         Sideable;
 
     /**
@@ -29,15 +29,7 @@ class Controller extends BaseController
      *
      * @var array
      */
-    protected $actions = [
-        'create',
-        'destroy',
-        'edit',
-        'index',
-        'show',
-        'store',
-        'update',
-    ];
+    protected $actions = [];
 
     /**
      * Params.
@@ -45,6 +37,20 @@ class Controller extends BaseController
      * @var array
      */
     public $params = [];
+
+    /**
+     * The model to use.
+     *
+     * @var [type]
+     */
+    protected $model;
+
+    /**
+     * If setted, the form request to use.
+     *      *
+     * @var FormRequest|null
+     */
+    protected $formRequest;
 
     /**
      * Get property or get automatically model or formRequest, otherwise null.
@@ -60,7 +66,7 @@ class Controller extends BaseController
         }
 
         if (in_array($method, $this->actions) || method_exists($this, $method)) {
-            return call_user_func_array( array( $this, $method), $parameters);
+            return call_user_func_array(array($this, $method), $parameters);
         } else {
             return parent::__call($method, $parameters);
         }
@@ -68,23 +74,16 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        $this->params = $this->injectParams();
-    }
+        if (request()->method != null) {
+            $this->params = $this->injectParams();
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        } else {
-            if ($property == "model") {
-                return $this->getModel();
+            if (!isset($this->model)) {
+                $this->model = $this->deduceModel();
             }
 
-            if ($property == "formRequest") {
-                return $this->getFormRequest();
+            if (!isset($this->formRequest)) {
+                $this->formRequest = $this->deduceFormRequest();
             }
-
-            return null;
         }
     }
 
@@ -101,41 +100,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Get model name from controller.
-     * If controller is PostController, model will be Post
-     *
-     * @return void
-     */
-    public function getModel()
-    {
-        $model = Str::replaceFirst('Controller', '', $this->getControllerName());
-
-        if (class_exists('App\\' . ucfirst($model))) {
-            return 'App\\' . ucfirst($model);
-        } else {
-            throw new ModelNotSpecifiedException($this->getControllerName());
-        }
-    }
-
-    /**
-     * Get model name from controller.
-     * If controller is PostController, model will be Post
-     *
-     * @return void
-     */
-    public function getFormRequest()
-    {
-        $model = Str::replaceFirst('App\\', '', $this->getModel());
-        $formRequest = 'App\Http\Requests\\' . $model . 'Request';
-
-        if (class_exists($formRequest)) {
-            return $formRequest;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Get all params from route url and from request.
      *
      * @return array
@@ -146,6 +110,11 @@ class Controller extends BaseController
             request()->all(),
             request()->route()->parameters
         );
+    }
+
+    public function registerAction($name, $validable = false)
+    {
+        $this->actions[$name] = [];
     }
 
     /**
@@ -164,8 +133,10 @@ class Controller extends BaseController
             $this->callBeforeAction($action);
         }
 
-        if (method_exists($this, "callValidator") && in_array($action, ["store", "update"])) {
-            $params["data"] = $this->callValidator();
+        if (in_array($action, ["store", "update"])) {
+            if ($this->formRequest != null) {
+                resolve($this->formRequest);
+            }
         }
 
         if (method_exists($this, $action . "Query")) {
@@ -177,5 +148,15 @@ class Controller extends BaseController
         }
 
         return $this->response($this->params, $action);
+    }
+
+    /**
+     * Get model name by class namespace.
+     *
+     * @return string
+     */
+    final protected function getModelName()
+    {
+        return strtolower(class_basename($this->model));
     }
 }
