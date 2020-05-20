@@ -1,5 +1,8 @@
 <?php
 
 return [
-    'modelsPath' => app_path('Models')
+    'namespaces' => [
+        'models' => 'App\\',
+        'formRequests' => 'App\\Http\\Requests'
+    ]
 ];
