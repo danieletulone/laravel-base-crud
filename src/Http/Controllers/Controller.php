@@ -29,7 +29,14 @@ class Controller extends BaseController
      *
      * @var array
      */
-    protected $actions = [];
+    public $actions = [];
+
+    /**
+     * List of default actions.
+     *
+     * @var array
+     */
+    protected $defaultActions = [];
 
     /**
      * Params.
@@ -97,6 +104,11 @@ class Controller extends BaseController
         $controller = app('request')->route()->getAction()['controller'];
 
         return explode("@", class_basename($controller))[0];
+    }
+
+    public function getActions()
+    {
+        return array_merge($this->defaultActions, $this->actions);
     }
 
     /**

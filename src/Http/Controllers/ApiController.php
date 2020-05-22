@@ -19,7 +19,7 @@ class ApiController extends Controller
      *
      * @var array
      */
-    protected $actions = [
+    public $defaultActions = [
         'destroy',
         'index',
         'show',

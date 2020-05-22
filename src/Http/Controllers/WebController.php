@@ -15,7 +15,7 @@ class WebController extends Controller
      *
      * @var array
      */
-    protected $actions = [
+    public $defaultActions = [
         'create',
         'destroy',
         'edit',
