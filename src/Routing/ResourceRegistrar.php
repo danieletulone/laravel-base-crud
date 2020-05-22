@@ -5,16 +5,10 @@ namespace DanieleTulone\BaseCrud\Routing;
 use Illuminate\Routing\ResourceRegistrar as OriginalRegistrar;
 use Illuminate\Routing\Router;
 use Illuminate\Routing\RouteCollection;
+use Illuminate\Support\Str;
 
 class ResourceRegistrar extends OriginalRegistrar
 {
-    // add data to the array
-    /**
-     * The default actions for a resourceful controller.
-     *
-     * @var array
-     */
-    protected $resourceDefaults = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy', 'data'];
 
     /**
      * Create a new resource registrar instance.
@@ -59,20 +53,42 @@ class ResourceRegistrar extends OriginalRegistrar
 
         $collection = new RouteCollection;
 
-        foreach ($this->getResourceMethods($defaults, $options) as $m) {
-            $collection->add($this->{'addResource'.ucfirst($m)}(
-                $name, $base, $controller, $options
-            ));
-        }
+        $controllerNs = $this->router->getGroupStack()[0]['namespace'] . '\\' . $controller;
+        $controllerClass = new $controllerNs;
 
-        $actionsFromController = $controller::actions;
-        // foreach ()
+        if (property_exists($controllerNs, 'actions')) {
+            foreach ($controllerClass->getActions() as $action) {
+                if (gettype($action) == 'array') {
+                    if (method_exists($this, 'addResource'.ucfirst($action['name']))) {
+                        $collection->add($this->{'addResource'.ucfirst($action['name'])}(
+                            $name, $base, $controller, $options
+                        ));
+                    } else {
+                        $collection->add($this->addResourceFromArray(
+                            $name, $base, $controller, $options, $action
+                        ));
+                    }
+                }
+
+                if (gettype($action) == 'string') {
+                    if (method_exists($this, 'addResource'.ucfirst($action))) {
+                        $collection->add($this->{'addResource'.ucfirst($action)}(
+                            $name, $base, $controller, $options
+                        ));
+                    } else {
+                        $collection->add($this->addResourceGet(
+                            $name, $base, $controller, $options, $action
+                        ));
+                    }
+                }
+            }
+        }
 
         return $collection;
     }
 
     /**
-     * Add the data method for a resourceful route.
+     * Add generic method for a resourceful route.
      *
      * @param  string  $name
      * @param  string  $base
@@ -80,12 +96,21 @@ class ResourceRegistrar extends OriginalRegistrar
      * @param  array   $options
      * @return \Illuminate\Routing\Route
      */
-    protected function addResourceData($name, $base, $controller, $options)
+    protected function addResourceGet($name, $base, $controller, $options, $value)
     {
-        $uri = $this->getResourceUri($name) . "/data";
+        $uri = $this->getResourceUri($name) . "/$value";
 
-        $action = $this->getResourceAction($name, $controller, 'data', $options);
+        $action = $this->getResourceAction($name, $controller, $value, $options);
 
         return $this->router->get($uri, $action);
+    }
+
+    protected function addResourceFromArray($name, $base, $controller, $options, $value)
+    {
+        $uri = $this->getResourceUri($name) . "/" . ($value['uri'] ?? '');
+
+        $action = $this->getResourceAction($name, $controller, $value['action'], $options);
+
+        return $this->router->{strtolower($value['method']) ?? 'get'}($uri, $action);
     }
 }
