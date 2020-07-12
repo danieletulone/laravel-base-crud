@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class ResourceRegistrar extends OriginalRegistrar
 {
-
     /**
      * Create a new resource registrar instance.
      *

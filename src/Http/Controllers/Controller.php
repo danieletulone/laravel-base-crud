@@ -25,7 +25,7 @@ class Controller extends BaseController
         Sideable;
 
     /**
-     * List of default actions.
+     * List of actions.
      *
      * @var array
      */

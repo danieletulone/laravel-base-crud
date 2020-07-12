@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class BaseCrudServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap any application services.
      *
