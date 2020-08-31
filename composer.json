@@ -16,7 +16,7 @@
         "php": "^7.2.5"
     },
     "require-dev": {
-        "laravel/framework": "6.x.x"
+        "laravel/framework": "7.x.x"
     },
     "autoload": {
         "psr-4": {
